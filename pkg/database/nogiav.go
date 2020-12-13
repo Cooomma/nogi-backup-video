@@ -29,7 +29,6 @@ type NogiAv struct {
 }
 
 func ConnectDB(username, password, url, dbName string) (*gorm.DB, error) {
-	// refer https://github.com/go-sql-driver/mysql#dsn-data-source-name for details
 	connectionString := fmt.Sprintf("%s:%s@tcp(%s:3306)/%s?charset=utf8mb4&parseTime=True&loc=Local", username, password, url, dbName)
 	return gorm.Open(mysql.Open(connectionString), &gorm.Config{})
 }
@@ -39,8 +38,7 @@ func IsBilibiliIDExisted(db *gorm.DB, avID int, bvID string) (bool, error) {
 	if avID != 0 {
 		result := db.Where("av_id = ?", avID).First(&nogiAv)
 		return result.RowsAffected > 0, result.Error
-	}
-	if len(bvID) != 0 {
+	} else if len(bvID) != 0 {
 		result := db.Where("bv_id = ?", bvID).First(&nogiAv)
 		return result.RowsAffected > 0, result.Error
 	}
